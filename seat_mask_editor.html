@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seat Mask Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0c0c;--s1:#141414;--s2:#1c1c1c;--s3:#252525;
+  --bd:#2e2e2e;--bd2:#3a3a3a;
+  --tx:#d4d4d4;--tx2:#888;--tx3:#555;
+  --acc:#f59e0b;--acc2:#d97706;--accd:#78350f;
+  --red:#ef4444;--grn:#22c55e;--blu:#3b82f6;
+}
+body{background:var(--bg);color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:12px;height:100vh;display:flex;flex-direction:column;overflow:hidden;user-select:none}
+/* HEADER */
+header{background:var(--s1);border-bottom:1px solid var(--bd);padding:0 16px;height:48px;display:flex;align-items:center;gap:16px;flex-shrink:0}
+header h1{font-size:14px;font-weight:500;color:var(--acc);letter-spacing:2px;text-transform:uppercase}
+header .sep{width:1px;height:20px;background:var(--bd);margin:0 4px}
+.hbtn{background:var(--s2);border:1px solid var(--bd);color:var(--tx2);padding:6px 14px;border-radius:4px;cursor:pointer;font-family:inherit;font-size:11px;letter-spacing:.5px;transition:.15s}
+.hbtn:hover{border-color:var(--acc);color:var(--acc)}
+.hbtn.primary{background:var(--accd);border-color:var(--acc);color:var(--acc)}
+.hbtn.primary:hover{background:var(--acc);color:#000}
+/* MAIN */
+main{display:flex;flex:1;overflow:hidden}
+/* TOOLBAR */
+aside.tools{width:64px;background:var(--s1);border-right:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:4px;flex-shrink:0}
+.tool-btn{width:44px;height:44px;background:none;border:1px solid transparent;border-radius:6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--tx2);transition:.15s;position:relative}
+.tool-btn svg{width:20px;height:20px}
+.tool-btn span{font-size:8px;letter-spacing:.5px;text-transform:uppercase}
+.tool-btn:hover{background:var(--s3);color:var(--tx)}
+.tool-btn.active{background:var(--accd);border-color:var(--acc);color:var(--acc)}
+.tool-sep{width:32px;height:1px;background:var(--bd);margin:4px 0}
+/* CANVAS AREA */
+.canvas-wrap{flex:1;overflow:hidden;position:relative;background:repeating-conic-gradient(#1a1a1a 0% 25%,#141414 0% 50%) 0 0/20px 20px}
+#c{position:absolute;top:0;left:0;cursor:crosshair}
+.hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);border:1px solid var(--bd);padding:6px 14px;border-radius:4px;font-size:11px;color:var(--tx2);pointer-events:none;white-space:nowrap}
+.zoom-info{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.6);border:1px solid var(--bd);padding:4px 10px;border-radius:4px;font-size:11px;color:var(--tx2);pointer-events:none}
+/* SEATS PANEL */
+aside.seats-panel{width:220px;background:var(--s1);border-left:1px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0}
+.panel-head{padding:10px 14px;border-bottom:1px solid var(--bd);color:var(--tx2);font-size:11px;letter-spacing:1px;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+.seat-count{background:var(--s3);padding:2px 8px;border-radius:10px;font-size:11px;color:var(--acc)}
+.seats-list{flex:1;overflow-y:auto;padding:8px}
+.seats-list::-webkit-scrollbar{width:4px}
+.seats-list::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+.seat-item{background:var(--s2);border:1px solid var(--bd);border-radius:6px;padding:8px 10px;margin-bottom:6px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:8px}
+.seat-item:hover{border-color:var(--bd2)}
+.seat-item.selected{border-color:var(--acc);background:var(--accd)}
+.seat-color{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.seat-info{flex:1;min-width:0}
+.seat-id{font-size:10px;color:var(--tx2);margin-bottom:2px}
+.seat-name-input{background:none;border:none;color:var(--tx);font-family:inherit;font-size:12px;width:100%;outline:none;padding:0}
+.seat-name-input:focus{color:var(--acc)}
+.seat-del{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:14px;padding:0 2px;line-height:1;transition:.15s;flex-shrink:0}
+.seat-del:hover{color:var(--red)}
+.seat-type-badge{font-size:9px;color:var(--tx3);background:var(--s3);padding:2px 6px;border-radius:3px;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0}
+/* STATUS */
+footer{background:var(--s1);border-top:1px solid var(--bd);height:28px;display:flex;align-items:center;padding:0 16px;gap:16px}
+.status-item{font-size:11px;color:var(--tx3)}
+.status-item span{color:var(--tx2)}
+/* EMPTY STATE */
+.empty-state{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;pointer-events:none}
+.empty-state svg{width:48px;height:48px;color:var(--tx3)}
+.empty-state p{color:var(--tx3);font-size:13px}
+.empty-state small{color:var(--tx3);font-size:11px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⬛ Seat Mask Editor</h1>
+  <div class="sep"></div>
+  <input type="file" id="fileInput" accept="image/*" style="display:none">
+  <button class="hbtn" onclick="document.getElementById('fileInput').click()">📂 Load Image</button>
+  <div class="sep"></div>
+  <button class="hbtn" onclick="exportMask()" id="btnMask" disabled>⬇ Export Mask PNG</button>
+  <button class="hbtn" onclick="exportJSON()" id="btnJSON" disabled>⬇ Export JSON</button>
+  <div class="sep"></div>
+  <button class="hbtn primary" onclick="exportBoth()" id="btnBoth" disabled>⬇ Export All</button>
+  <div style="margin-left:auto;font-size:11px;color:var(--tx3)">Ctrl+Z undo · Del delete · Scroll zoom · Space+drag pan</div>
+</header>
+
+<main>
+  <aside class="tools">
+    <button class="tool-btn active" id="tool-select" onclick="setTool('select')" title="Select (V)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-7 1-4 7z"/></svg>
+      <span>Select</span>
+    </button>
+    <div class="tool-sep"></div>
+    <button class="tool-btn" id="tool-rect" onclick="setTool('rect')" title="Rectangle (R)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="1"/></svg>
+      <span>Rect</span>
+    </button>
+    <button class="tool-btn" id="tool-poly" onclick="setTool('poly')" title="Polygon (P)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,3 21,9 18,20 6,20 3,9"/></svg>
+      <span>Poly</span>
+    </button>
+    <button class="tool-btn" id="tool-freehand" onclick="setTool('freehand')" title="Freehand (F)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17 C6 10, 10 5, 12 8 S16 16, 19 14 S22 7, 21 7"/></svg>
+      <span>Free</span>
+    </button>
+    <div class="tool-sep"></div>
+    <button class="tool-btn" id="tool-delete" onclick="deleteSelected()" title="Delete selected (Del)" style="color:var(--red)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/><path d="M10,11v6M14,11v6"/><path d="M9,6V4h6v2"/></svg>
+      <span>Delete</span>
+    </button>
+    <div style="flex:1"></div>
+    <button class="tool-btn" onclick="resetView()" title="Reset View (0)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+      <span>Fit</span>
+    </button>
+  </aside>
+
+  <div class="canvas-wrap" id="canvasWrap">
+    <canvas id="c"></canvas>
+    <div class="zoom-info" id="zoomInfo">100%</div>
+    <div class="hint" id="hint">Load an image to begin</div>
+    <div class="empty-state" id="emptyState">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      <p>No image loaded</p>
+      <small>Click "Load Image" or drag & drop an image file</small>
+    </div>
+  </div>
+
+  <aside class="seats-panel">
+    <div class="panel-head">Seats <span class="seat-count" id="seatCount">0</span></div>
+    <div class="seats-list" id="seatsList"></div>
+  </aside>
+</main>
+
+<footer>
+  <div class="status-item">Tool: <span id="statusTool">select</span></div>
+  <div class="status-item">Cursor: <span id="statusPos">–</span></div>
+  <div class="status-item">Image: <span id="statusImg">–</span></div>
+  <div class="status-item">Seats: <span id="statusSeats">0</span></div>
+</footer>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const wrap = document.getElementById('canvasWrap');
+
+const COLORS = ['#f87171','#fb923c','#fbbf24','#a3e635','#34d399','#38bdf8','#818cf8','#e879f9','#f472b6','#4ade80','#2dd4bf','#60a5fa'];
+const ALPHA_FILL = 0.25, ALPHA_SEL = 0.45;
+
+let state = {
+  img: null, imgW: 0, imgH: 0,
+  seats: [], nextId: 1, selectedId: null,
+  tool: 'select',
+  vx: 0, vy: 0, vs: 1,
+  drawing: false, drawPts: [], drawStart: null,
+  pan: false, panStart: null, panOrigin: null,
+  history: [],
+  mouse: {x:0,y:0}
+};
+
+// ── Coordinate transforms ────────────────────────────────────────────────────
+function c2i(cx,cy){ return {x:(cx-state.vx)/state.vs, y:(cy-state.vy)/state.vs}; }
+function i2c(ix,iy){ return {x:ix*state.vs+state.vx, y:iy*state.vs+state.vy}; }
+
+// ── File loading ─────────────────────────────────────────────────────────────
+document.getElementById('fileInput').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const url=URL.createObjectURL(f);
+  const img=new Image();
+  img.onload=()=>{ state.img=img; state.imgW=img.width; state.imgH=img.height; resetView(); setExportEnabled(true); document.getElementById('emptyState').style.display='none'; document.getElementById('statusImg').textContent=`${img.width}×${img.height}`; render(); };
+  img.src=url;
+});
+
+// Drag & drop
+wrap.addEventListener('dragover',e=>e.preventDefault());
+wrap.addEventListener('drop',e=>{ e.preventDefault(); const f=e.dataTransfer.files[0]; if(f&&f.type.startsWith('image/')){ document.getElementById('fileInput').files; const inp=document.getElementById('fileInput'); const dt=new DataTransfer(); dt.items.add(f); inp.files=dt.files; inp.dispatchEvent(new Event('change')); }});
+
+// ── View ─────────────────────────────────────────────────────────────────────
+function resetView(){
+  if(!state.img) return;
+  const W=wrap.clientWidth, H=wrap.clientHeight;
+  const sc=Math.min((W-40)/state.imgW,(H-40)/state.imgH,1);
+  state.vs=sc;
+  state.vx=(W-state.imgW*sc)/2;
+  state.vy=(H-state.imgH*sc)/2;
+  updateZoom(); render();
+}
+
+function resizeCanvas(){
+  canvas.width=wrap.clientWidth; canvas.height=wrap.clientHeight; render();
+}
+new ResizeObserver(resizeCanvas).observe(wrap);
+
+// ── Render ───────────────────────────────────────────────────────────────────
+function render(){
+  const W=canvas.width, H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+  if(!state.img){ return; }
+
+  // draw image
+  ctx.save();
+  ctx.translate(state.vx,state.vy);
+  ctx.scale(state.vs,state.vs);
+  ctx.drawImage(state.img,0,0);
+  ctx.restore();
+
+  // draw seats
+  for(const s of state.seats){
+    const sel=(s.id===state.selectedId);
+    drawSeat(s,sel);
+  }
+
+  // draw in-progress
+  if(state.drawing && state.drawPts.length>0){
+    drawInProgress();
+  }
+
+  updateHint();
+}
+
+function makePath(pts){
+  if(pts.length<2) return;
+  const p0=i2c(pts[0].x,pts[0].y);
+  ctx.moveTo(p0.x,p0.y);
+  for(let i=1;i<pts.length;i++){
+    const p=i2c(pts[i].x,pts[i].y);
+    ctx.lineTo(p.x,p.y);
+  }
+  ctx.closePath();
+}
+
+function centroid(pts){ return {x:pts.reduce((a,p)=>a+p.x,0)/pts.length, y:pts.reduce((a,p)=>a+p.y,0)/pts.length}; }
+
+function drawSeat(s,sel){
+  const pts=seatPoints(s);
+  if(!pts||pts.length<3) return;
+  const col=s.color;
+
+  ctx.save();
+  ctx.beginPath();
+  makePath(pts);
+
+  // fill
+  ctx.fillStyle=hexAlpha(col,sel?ALPHA_SEL:ALPHA_FILL);
+  ctx.fill();
+
+  // stroke
+  ctx.strokeStyle=sel?'#ffffff':col;
+  ctx.lineWidth=sel?2:1.5;
+  ctx.setLineDash(sel?[6,3]:[]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // label
+  const c=centroid(pts), cp=i2c(c.x,c.y);
+  const label=s.name||`S${s.id}`;
+  ctx.font=`bold ${Math.max(10,Math.min(16,state.vs*18))}px JetBrains Mono,monospace`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  const tw=ctx.measureText(label).width+8;
+  const th=Math.max(10,Math.min(16,state.vs*18))+6;
+  ctx.fillStyle='rgba(0,0,0,0.65)';
+  roundRect(ctx,cp.x-tw/2,cp.y-th/2,tw,th,3);
+  ctx.fill();
+  ctx.fillStyle=col;
+  ctx.fillText(label,cp.x,cp.y);
+
+  ctx.restore();
+}
+
+function drawInProgress(){
+  const pts=state.drawPts;
+  const col=state.tool==='rect'?'#f59e0b':'#38bdf8';
+  ctx.save();
+  ctx.strokeStyle=col;
+  ctx.lineWidth=1.5;
+  ctx.setLineDash([5,3]);
+
+  if(state.tool==='rect' && pts.length>=2){
+    ctx.beginPath();
+    makePath(pts);
+    ctx.fillStyle=hexAlpha(col,0.15);
+    ctx.fill();
+    ctx.stroke();
+  } else {
+    ctx.beginPath();
+    const p0=i2c(pts[0].x,pts[0].y);
+    ctx.moveTo(p0.x,p0.y);
+    for(let i=1;i<pts.length;i++){
+      const p=i2c(pts[i].x,pts[i].y);
+      ctx.lineTo(p.x,p.y);
+    }
+    if(state.tool==='poly'){
+      // line to current mouse
+      ctx.lineTo(state.mouse.x,state.mouse.y);
+    }
+    ctx.stroke();
+
+    // draw control points for polygon
+    if(state.tool==='poly'){
+      for(const pt of pts){
+        const cp=i2c(pt.x,pt.y);
+        ctx.beginPath();
+        ctx.arc(cp.x,cp.y,4,0,Math.PI*2);
+        ctx.fillStyle=col;
+        ctx.fill();
+      }
+    }
+  }
+  ctx.restore();
+}
+
+function seatPoints(s){
+  if(s.type==='rect'){
+    const [a,b]=s.points;
+    return [{x:a.x,y:a.y},{x:b.x,y:a.y},{x:b.x,y:b.y},{x:a.x,y:b.y}];
+  }
+  return s.points;
+}
+
+// ── Tool management ──────────────────────────────────────────────────────────
+function setTool(t){
+  if(state.drawing){ cancelDraw(); }
+  state.tool=t;
+  document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('tool-'+t);
+  if(el) el.classList.add('active');
+  canvas.style.cursor=t==='select'?'default':'crosshair';
+  document.getElementById('statusTool').textContent=t;
+}
+
+function cancelDraw(){ state.drawing=false; state.drawPts=[]; state.drawStart=null; render(); }
+
+// ── Mouse events ─────────────────────────────────────────────────────────────
+canvas.addEventListener('mousedown',onDown);
+canvas.addEventListener('mousemove',onMove);
+canvas.addEventListener('mouseup',onUp);
+canvas.addEventListener('dblclick',onDbl);
+canvas.addEventListener('wheel',onWheel,{passive:false});
+canvas.addEventListener('contextmenu',e=>{e.preventDefault();cancelDraw();});
+
+function onDown(e){
+  if(!state.img) return;
+  e.preventDefault();
+  const {x,y}=canvasXY(e);
+
+  // Pan: middle button or space+left
+  if(e.button===1 || (e.button===0 && e.getModifierState('  '))){
+    state.pan=true; state.panStart={x,y}; state.panOrigin={vx:state.vx,vy:state.vy};
+    canvas.style.cursor='grab'; return;
+  }
+  if(e.button!==0) return;
+
+  const ip=c2i(x,y);
+
+  if(state.tool==='select'){
+    // find seat under cursor
+    const hit=hitTest(ip.x,ip.y);
+    state.selectedId=hit?hit.id:null;
+    updateSeatsList(); render(); return;
+  }
+
+  if(state.tool==='rect'){
+    state.drawing=true; state.drawPts=[ip,{...ip}]; return;
+  }
+  if(state.tool==='poly'){
+    if(!state.drawing){ state.drawing=true; state.drawPts=[ip]; }
+    else { state.drawPts.push({...ip}); }
+    return;
+  }
+  if(state.tool==='freehand'){
+    state.drawing=true; state.drawPts=[ip]; return;
+  }
+}
+
+function onMove(e){
+  const {x,y}=canvasXY(e);
+  state.mouse={x,y};
+  const ip=c2i(x,y);
+  document.getElementById('statusPos').textContent=`${Math.round(ip.x)}, ${Math.round(ip.y)}`;
+
+  if(state.pan && state.panStart){
+    state.vx=state.panOrigin.vx+(x-state.panStart.x);
+    state.vy=state.panOrigin.vy+(y-state.panStart.y);
+    updateZoom(); render(); return;
+  }
+  if(!state.drawing) return;
+
+  if(state.tool==='rect' && state.drawPts.length>=2){
+    const start=state.drawPts[0];
+    state.drawPts=[start,ip,{x:ip.x,y:start.y},{x:start.x,y:ip.y}];
+    // store as 2-point for rect
+    state.drawPts=[start,ip];
+  }
+  if(state.tool==='freehand'){ state.drawPts.push({...ip}); }
+  render();
+}
+
+function onUp(e){
+  if(state.pan){ state.pan=false; canvas.style.cursor=state.tool==='select'?'default':'crosshair'; return; }
+  if(!state.drawing) return;
+  if(e.button!==0) return;
+  const {x,y}=canvasXY(e);
+  const ip=c2i(x,y);
+
+  if(state.tool==='rect'){
+    const start=state.drawPts[0];
+    if(Math.abs(ip.x-start.x)>4 && Math.abs(ip.y-start.y)>4){
+      pushHistory();
+      addSeat('rect',[start,ip]);
+    }
+    cancelDraw(); return;
+  }
+  if(state.tool==='freehand'){
+    state.drawPts.push({...ip});
+    if(state.drawPts.length>5){
+      const simp=rdp(state.drawPts,2/state.vs);
+      if(simp.length>=3){ pushHistory(); addSeat('freehand',simp); }
+    }
+    cancelDraw(); return;
+  }
+  // poly: handled by clicks + dblclick
+  render();
+}
+
+function onDbl(e){
+  if(state.tool==='poly' && state.drawing && state.drawPts.length>=3){
+    e.preventDefault();
+    const pts=[...state.drawPts];
+    // remove last duplicate added by the last click
+    pushHistory();
+    addSeat('poly',pts);
+    cancelDraw();
+  }
+}
+
+function onWheel(e){
+  e.preventDefault();
+  if(!state.img) return;
+  const {x,y}=canvasXY(e);
+  const factor=e.deltaY<0?1.12:1/1.12;
+  const newScale=Math.min(Math.max(state.vs*factor,0.05),20);
+  state.vx=x-(x-state.vx)*(newScale/state.vs);
+  state.vy=y-(y-state.vy)*(newScale/state.vs);
+  state.vs=newScale;
+  updateZoom(); render();
+}
+
+// Keyboard
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT') return;
+  if(e.key==='Delete'||e.key==='Backspace'){ deleteSelected(); }
+  if(e.key==='z'&&(e.ctrlKey||e.metaKey)){ undo(); e.preventDefault(); }
+  if(e.key==='Escape'){ cancelDraw(); }
+  if(e.key==='v'||e.key==='V'){ setTool('select'); }
+  if(e.key==='r'||e.key==='R'){ setTool('rect'); }
+  if(e.key==='p'||e.key==='P'){ setTool('poly'); }
+  if(e.key==='f'||e.key==='F'){ setTool('freehand'); }
+  if(e.key==='0'){ resetView(); }
+});
+
+// Space+drag pan
+document.addEventListener('keydown',e=>{ if(e.code==='Space'&&!e.target.matches('input')) { e.preventDefault(); canvas.style.cursor='grab'; }});
+document.addEventListener('keyup',e=>{ if(e.code==='Space') canvas.style.cursor=state.tool==='select'?'default':'crosshair'; });
+canvas.addEventListener('mousedown',e=>{ if(e.getModifierState('  ')||e.button===1){ state.pan=true; state.panStart=canvasXY(e); state.panOrigin={vx:state.vx,vy:state.vy}; }});
+
+// ── Seat management ──────────────────────────────────────────────────────────
+function addSeat(type,points){
+  const id=state.nextId++;
+  const seat={id, name:`S${id}`, type, points, color:COLORS[(id-1)%COLORS.length]};
+  state.seats.push(seat);
+  state.selectedId=id;
+  updateSeatsList(); updateCounts(); render();
+}
+
+function deleteSelected(){
+  if(!state.selectedId) return;
+  pushHistory();
+  state.seats=state.seats.filter(s=>s.id!==state.selectedId);
+  state.selectedId=null;
+  updateSeatsList(); updateCounts(); render();
+}
+
+function hitTest(ix,iy){
+  for(let i=state.seats.length-1;i>=0;i--){
+    const s=state.seats[i];
+    const pts=seatPoints(s);
+    if(pts&&pointInPoly(ix,iy,pts)) return s;
+  }
+  return null;
+}
+
+function pointInPoly(x,y,pts){
+  let inside=false;
+  for(let i=0,j=pts.length-1;i<pts.length;j=i++){
+    const xi=pts[i].x,yi=pts[i].y,xj=pts[j].x,yj=pts[j].y;
+    if(((yi>y)!=(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) inside=!inside;
+  }
+  return inside;
+}
+
+// ── UI ───────────────────────────────────────────────────────────────────────
+function updateSeatsList(){
+  const list=document.getElementById('seatsList');
+  list.innerHTML='';
+  for(const s of state.seats){
+    const div=document.createElement('div');
+    div.className='seat-item'+(s.id===state.selectedId?' selected':'');
+    div.innerHTML=`
+      <div class="seat-color" style="background:${s.color}"></div>
+      <div class="seat-info">
+        <div class="seat-id">ID: ${s.id}</div>
+        <input class="seat-name-input" value="${s.name}" data-id="${s.id}" spellcheck="false">
+      </div>
+      <span class="seat-type-badge">${s.type.slice(0,4)}</span>
+      <button class="seat-del" data-id="${s.id}" title="Delete">✕</button>`;
+    div.addEventListener('click',ev=>{
+      if(ev.target.classList.contains('seat-del')) return;
+      if(ev.target.classList.contains('seat-name-input')) return;
+      state.selectedId=s.id; updateSeatsList(); render();
+    });
+    div.querySelector('.seat-del').addEventListener('click',()=>{
+      pushHistory(); state.seats=state.seats.filter(x=>x.id!==s.id); if(state.selectedId===s.id) state.selectedId=null; updateSeatsList(); updateCounts(); render();
+    });
+    div.querySelector('.seat-name-input').addEventListener('input',ev=>{
+      const seat=state.seats.find(x=>x.id===parseInt(ev.target.dataset.id));
+      if(seat) seat.name=ev.target.value; render();
+    });
+    list.appendChild(div);
+  }
+}
+
+function updateCounts(){
+  const n=state.seats.length;
+  document.getElementById('seatCount').textContent=n;
+  document.getElementById('statusSeats').textContent=n;
+}
+
+function updateZoom(){ document.getElementById('zoomInfo').textContent=Math.round(state.vs*100)+'%'; }
+
+function updateHint(){
+  const el=document.getElementById('hint');
+  const hints={
+    select:'Click a seat to select · Del to delete',
+    rect:'Click & drag to draw a rectangle',
+    poly:'Click to add points · Double-click to close',
+    freehand:'Click & drag to draw freehand'
+  };
+  el.textContent=hints[state.tool]||'';
+}
+
+function setExportEnabled(v){
+  ['btnMask','btnJSON','btnBoth'].forEach(id=>document.getElementById(id).disabled=!v);
+}
+
+// ── History ──────────────────────────────────────────────────────────────────
+function pushHistory(){ state.history.push(JSON.stringify({seats:state.seats,nextId:state.nextId})); if(state.history.length>50) state.history.shift(); }
+function undo(){
+  if(!state.history.length) return;
+  const prev=JSON.parse(state.history.pop());
+  state.seats=prev.seats; state.nextId=prev.nextId; state.selectedId=null;
+  updateSeatsList(); updateCounts(); render();
+}
+
+// ── Export ───────────────────────────────────────────────────────────────────
+function exportMask(){
+  if(!state.img||!state.seats.length){ alert('Load an image and draw at least one seat first.'); return; }
+  const oc=document.createElement('canvas');
+  oc.width=state.imgW; oc.height=state.imgH;
+  const octx=oc.getContext('2d');
+  octx.fillStyle='#000000';
+  octx.fillRect(0,0,state.imgW,state.imgH);
+  octx.imageSmoothingEnabled=false;
+
+  for(const s of state.seats){
+    const pts=seatPoints(s);
+    if(!pts||pts.length<3) continue;
+    const v=s.id&0xFF; // clamp to 0-255
+    octx.fillStyle=`rgb(${v},${v},${v})`;
+    octx.beginPath();
+    octx.moveTo(pts[0].x,pts[0].y);
+    for(let i=1;i<pts.length;i++) octx.lineTo(pts[i].x,pts[i].y);
+    octx.closePath();
+    octx.fill();
+  }
+  download(oc.toDataURL('image/png'),'seat_mask.png');
+}
+
+function exportJSON(){
+  if(!state.seats.length){ alert('No seats to export.'); return; }
+  const data={
+    image_size:{width:state.imgW,height:state.imgH},
+    seats:state.seats.map(s=>({id:s.id,name:s.name,type:s.type,points:seatPoints(s).map(p=>({x:Math.round(p.x),y:Math.round(p.y)})),color:s.color}))
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  download(URL.createObjectURL(blob),'seats.json');
+}
+
+function exportBoth(){ exportMask(); setTimeout(exportJSON,200); }
+
+function download(url,name){
+  const a=document.createElement('a'); a.href=url; a.download=name; a.click();
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function canvasXY(e){ const r=canvas.getBoundingClientRect(); return {x:e.clientX-r.left,y:e.clientY-r.top}; }
+
+function hexAlpha(hex,alpha){
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r);
+  ctx.closePath();
+}
+
+// Ramer-Douglas-Peucker path simplification
+function rdp(pts,eps){
+  if(pts.length<=2) return pts;
+  let maxD=0,idx=0;
+  for(let i=1;i<pts.length-1;i++){
+    const d=ptLineDist(pts[i],pts[0],pts[pts.length-1]);
+    if(d>maxD){maxD=d;idx=i;}
+  }
+  if(maxD>eps){
+    const L=rdp(pts.slice(0,idx+1),eps);
+    const R=rdp(pts.slice(idx),eps);
+    return [...L.slice(0,-1),...R];
+  }
+  return [pts[0],pts[pts.length-1]];
+}
+function ptLineDist(p,a,b){
+  const dx=b.x-a.x,dy=b.y-a.y;
+  if(dx===0&&dy===0) return Math.hypot(p.x-a.x,p.y-a.y);
+  const t=((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy);
+  const tc=Math.max(0,Math.min(1,t));
+  return Math.hypot(p.x-(a.x+tc*dx),p.y-(a.y+tc*dy));
+}
+
+// Init
+resizeCanvas();
+updateHint();
+</script>
+</body>
+</html>
