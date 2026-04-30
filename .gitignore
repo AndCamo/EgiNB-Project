@@ -11,3 +11,6 @@ wheels/
 
 # DS_Store files
 .DS_Store
+
+# model weights
+weights/
