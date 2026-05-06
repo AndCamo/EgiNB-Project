@@ -1,6 +1,6 @@
-# P.I.E.N.A.H - Private Image Evaluation Network on Arduino Hardware
+# 📍P.I.E.N.A.H - Private Image Evaluation Network on Arduino Hardware
 
-![Project Logo](./assets/project-logo.jpg)
+<img src="./assets/project-logo.jpg" style="width: 300px; height: auto;" alt="Project Logo">
 
 ## 🔍 Overview
 P.I.E.N.A.H is an AI-powered system designed to analyze and determine seat occupancy in a classroom environment. It leverages a YOLO-based segmentation model to detect objects (such as people, laptops, and backpacks) and maps these detections to predefined seat masks to determine the availability of each seat. The system includes a FastAPI backend for processing and a Python-based frontend with a Telegram bot integration.
