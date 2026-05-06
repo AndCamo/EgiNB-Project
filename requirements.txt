@@ -54,3 +54,10 @@ typing-extensions==4.15.0
 ultralytics==8.4.45
 ultralytics-thop==2.0.19
 urllib3==2.6.3
+flask>=3.0.0
+flask-cors>=4.0.0
+icalendar>=5.0.0
+requests>=2.31.0
+pytz>=2024.1
+python-telegram-bot>=21.0
+python-dotenv>=1.0.0

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P.I.E.N.A.H. — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f6f3;
+    --surface: #ffffff;
+    --surface2: #f0efe9;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.14);
+    --text: #1a1a18;
+    --muted: #6b6b65;
+    --hint: #a0a09a;
+    --green: #3B6D11; --green-bg: #EAF3DE; --green-border: #C0DD97;
+    --amber: #854F0B; --amber-bg: #FAEEDA; --amber-border: #FAC775;
+    --red:   #A32D2D; --red-bg:   #FCEBEB; --red-border:   #F7C1C1;
+    --purple: #3C3489; --purple-bg: #EEEDFE; --purple-border: #AFA9EC;
+    --blue:  #185FA5; --blue-bg:  #E6F1FB;
+    --radius: 10px;
+    --radius-sm: 6px;
+    font-family: 'Sora', sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111110; --surface: #1c1c1a; --surface2: #232320;
+      --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+      --text: #e8e8e2; --muted: #888882; --hint: #555550;
+      --green: #97C459; --green-bg: #173404; --green-border: #3B6D11;
+      --amber: #EF9F27; --amber-bg: #412402; --amber-border: #854F0B;
+      --red:   #F09595; --red-bg:   #501313; --red-border:   #A32D2D;
+      --purple: #AFA9EC; --purple-bg: #26215C; --purple-border: #534AB7;
+      --blue:  #85B7EB; --blue-bg:  #042C53;
+    }
+  }
+
+  body { background: var(--bg); color: var(--text); min-height: 100vh; }
+  .page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* ── Nav ── */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 45px; }
+  .dot  { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 500; color: var(--muted);
+    text-decoration: none; padding: 6px 14px;
+    border: 0.5px solid var(--border2); border-radius: var(--radius-sm);
+    background: var(--surface); transition: color .15s, border-color .15s;
+  }
+  .nav-link:hover { color: var(--text); border-color: var(--green); }
+  .nav-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .ts { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--hint); }
+
+  /* ── Metrics ── */
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .metric { background: var(--surface2); border-radius: var(--radius-sm); padding: 1rem 1.1rem; }
+  .metric-label { font-size: 11px; color: var(--muted); letter-spacing: .04em; margin-bottom: 6px; }
+  .metric-value { font-size: 28px; font-weight: 500; line-height: 1; }
+  .metric-value.red   { color: var(--red); }
+  .metric-value.amber { color: var(--amber); }
+  .metric-value.green { color: var(--green); }
+  .metric-sub { font-size: 11px; color: var(--hint); margin-top: 5px; font-family: 'DM Mono', monospace; }
+
+  /* ── Progress ── */
+  .prog-wrap { margin-bottom: 1.5rem; }
+  .prog-header { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+  .prog-track { height: 10px; border-radius: 999px; background: var(--surface2); border: 0.5px solid var(--border); overflow: hidden; display: flex; }
+  .prog-seg { height: 100%; transition: width .7s ease; }
+  .prog-seg.occ  { background: #E24B4A; }
+  .prog-seg.part { background: #EF9F27; }
+  .prog-seg.free { background: #639922; }
+  .legend { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+  .legend-dot  { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ── Section title ── */
+  .section-title { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 12px; }
+
+  /* ── Type legend ── */
+  .type-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 1.5rem; }
+  .type-legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--muted); }
+  .type-swatch { width: 14px; height: 14px; border-radius: 3px; border: 0.5px solid; flex-shrink: 0; }
+
+  /* ── Filter bar ── */
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; align-items: center; }
+  .filter-label { font-size: 12px; color: var(--muted); margin-right: 4px; }
+  .filter-btn {
+    font-size: 12px; font-family: 'Sora', sans-serif;
+    padding: 4px 12px; border-radius: 999px;
+    border: 0.5px solid var(--border2);
+    background: var(--surface2); color: var(--muted);
+    cursor: pointer; transition: background .15s, color .15s;
+  }
+  .filter-btn.active { background: var(--surface); color: var(--text); border-color: var(--border2); font-weight: 500; }
+
+  /* ── Table map ── */
+  .tables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 2rem;
+  }
+  .table-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 12px;
+  }
+  .table-label {
+    font-size: 10px; font-family: 'DM Mono', monospace;
+    color: var(--hint); margin-bottom: 10px; letter-spacing: .06em;
+  }
+  .table-rect {
+    height: 10px; border-radius: 3px;
+    background: var(--surface2); border: 0.5px solid var(--border);
+    margin: 6px 0;
+  }
+  .seats-row { display: flex; gap: 6px; justify-content: center; }
+  .seat {
+    width: 30px; height: 30px; border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-family: 'DM Mono', monospace; font-weight: 500;
+    border: 0.5px solid; cursor: default;
+    transition: transform .12s, opacity .2s;
+    position: relative;
+  }
+  .seat:hover { transform: scale(1.2); z-index: 2; }
+  .seat.free    { background: var(--green-bg);  color: var(--green);  border-color: var(--green-border); }
+  .seat.occ     { background: var(--red-bg);    color: var(--red);    border-color: var(--red-border); }
+  .seat.part    { background: var(--amber-bg);  color: var(--amber);  border-color: var(--amber-border); }
+  .seat.laptop  { background: var(--amber-bg);  color: var(--amber);  border-color: var(--amber-border); }
+  .seat.backpack{ background: var(--purple-bg); color: var(--purple); border-color: var(--purple-border); }
+  .seat.dimmed  { opacity: 0.18; }
+
+  /* ── Tooltip ── */
+  #tooltip {
+    position: fixed; z-index: 999;
+    background: var(--surface); border: 0.5px solid var(--border2);
+    border-radius: var(--radius-sm); padding: 8px 12px;
+    font-size: 12px; line-height: 1.55; pointer-events: none;
+    display: none; max-width: 200px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  #tooltip strong { font-weight: 500; display: block; margin-bottom: 2px; }
+
+  hr { border: none; border-top: 0.5px solid var(--border); margin: 1.75rem 0; }
+
+  /* ── Aule Libere banner ── */
+  .aule-banner {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-left: 3px solid var(--green);
+    border-radius: var(--radius);
+    padding: 1.2rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .aule-banner-left { display: flex; align-items: center; gap: 12px; }
+  .aule-icon {
+    width: 38px; height: 38px; border-radius: 8px;
+    background: var(--green-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .aule-icon svg { width: 18px; height: 18px; stroke: var(--green); fill: none; stroke-width: 2; }
+  .aule-banner-title { font-size: 14px; font-weight: 600; }
+  .aule-banner-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .aule-banner-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--green); color: #fff;
+    border: none; border-radius: var(--radius-sm);
+    padding: 9px 16px; font-size: 13px; font-weight: 500;
+    text-decoration: none; font-family: 'Sora', sans-serif;
+    transition: opacity .15s; white-space: nowrap; flex-shrink: 0;
+  }
+  .aule-banner-btn:hover { opacity: 0.85; }
+  .aule-banner-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+  /* ── Telegram card ── */
+  .tg-card { background: var(--surface); border: 0.5px solid var(--border2); border-radius: var(--radius); padding: 1.4rem 1.6rem; }
+  .tg-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.2rem; }
+  .tg-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--blue-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .tg-avatar svg { width: 22px; height: 22px; fill: var(--blue); }
+  .tg-title { font-size: 15px; font-weight: 500; }
+  .tg-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .steps    { list-style: none; margin-bottom: 1.2rem; }
+  .step     { display: flex; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; line-height: 1.55; }
+  .step:last-child { border-bottom: none; padding-bottom: 0; }
+  .step-num { min-width: 22px; height: 22px; border-radius: 50%; background: var(--surface2); border: 0.5px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--muted); flex-shrink: 0; margin-top: 1px; }
+  code { background: var(--surface2); border: 0.5px solid var(--border2); border-radius: 4px; padding: 1px 7px; font-family: 'DM Mono', monospace; font-size: 12px; }
+  .tg-btn { display: inline-flex; align-items: center; gap: 8px; background: #185FA5; color: #E6F1FB; border: none; border-radius: var(--radius-sm); padding: 10px 20px; font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none; font-family: 'Sora', sans-serif; transition: background .15s; }
+  .tg-btn:hover { background: #0C447C; }
+  .tg-btn svg { width: 16px; height: 16px; fill: currentColor; }
+  .cmds { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 1rem; }
+  .cmd-box { background: var(--surface2); border-radius: var(--radius-sm); padding: 10px 12px; }
+  .cmd-box code { display: inline-block; margin-bottom: 4px; }
+  .cmd-box p    { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  @media(max-width:560px){
+    .aule-banner { flex-direction: column; align-items: flex-start; }
+    .aule-banner-btn { width: 100%; justify-content: center; }
+    .cmds { grid-template-columns: 1fr; }
+    .metrics { grid-template-columns: 1fr 1fr; }
+    .nav-link span { display: none; }
+    .tables-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div id="tooltip"></div>
+
+  <nav>
+    <div class="logo"><span class="dot"></span>
+      <img src="/images/project-logo.png" alt="P.I.E.N.A.H." style="height:90px;"> P.I.E.N.A.H.</div>
+    <div class="nav-right">
+      <a class="nav-link" href="/aule">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Aule Libere</span>
+      </a>
+      <span class="ts" id="ts">—</span>
+    </div>
+  </nav>
+
+  <!-- Metrics -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Posti totali</div>
+      <div class="metric-value" id="m-total">—</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Occupati</div>
+      <div class="metric-value red" id="m-occ">—</div>
+      <div class="metric-sub" id="m-occ-pct">—</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Parziali</div>
+      <div class="metric-value amber" id="m-part">—</div>
+      <div class="metric-sub" id="m-part-sub">overlap ≤ 30%</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Liberi</div>
+      <div class="metric-value green" id="m-free">—</div>
+      <div class="metric-sub" id="m-free-pct">—</div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="prog-wrap">
+    <div class="prog-header"><span>Occupazione aula</span><span id="occ-label">—%</span></div>
+    <div class="prog-track">
+      <div class="prog-seg occ"  id="bar-occ"  style="width:0%"></div>
+      <div class="prog-seg part" id="bar-part" style="width:0%"></div>
+      <div class="prog-seg free" id="bar-free" style="width:0%"></div>
+    </div>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#E24B4A"></span>Occupato</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>Parziale</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#639922"></span>Libero</span>
+    </div>
+  </div>
+
+  <!-- Seat map -->
+  <div class="section-title">Mappa posti per tavolo</div>
+
+  <!-- Type legend -->
+  <div class="type-legend">
+    <span class="type-legend-item">
+      <span class="type-swatch" style="background:var(--green-bg);border-color:var(--green-border)"></span>Libero
+    </span>
+    <span class="type-legend-item">
+      <span class="type-swatch" style="background:var(--red-bg);border-color:var(--red-border)"></span>Persona
+    </span>
+    <span class="type-legend-item">
+      <span class="type-swatch" style="background:var(--amber-bg);border-color:var(--amber-border)"></span>Laptop / parziale
+    </span>
+    <span class="type-legend-item">
+      <span class="type-swatch" style="background:var(--purple-bg);border-color:var(--purple-border)"></span>Zaino
+    </span>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <span class="filter-label">Mostra:</span>
+    <button class="filter-btn active" data-filter="all">Tutti</button>
+    <button class="filter-btn" data-filter="free">Liberi</button>
+    <button class="filter-btn" data-filter="occupied">Occupati</button>
+    <button class="filter-btn" data-filter="person">Persona</button>
+    <button class="filter-btn" data-filter="laptop">Laptop</button>
+    <button class="filter-btn" data-filter="backpack">Zaino</button>
+  </div>
+
+  <div class="tables-grid" id="tables-grid"></div>
+
+  <hr>
+
+  <!-- Aule Libere UniTo banner -->
+  <div class="aule-banner">
+    <div class="aule-banner-left">
+      <div class="aule-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div>
+        <div class="aule-banner-title">Aule Libere — UniTo</div>
+        <div class="aule-banner-sub">Consulta il calendario completo delle aule disponibili oggi</div>
+      </div>
+    </div>
+    <a class="aule-banner-btn" href="/aule">
+      Vai alle aule
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  <!-- Telegram -->
+  <div class="tg-card">
+    <div class="tg-header">
+      <div class="tg-avatar">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.7 8.02c-.12.56-.46.7-.93.44l-2.57-1.89-1.24 1.19c-.14.14-.26.26-.53.26l.19-2.67 4.87-4.4c.21-.19-.05-.29-.32-.1L7.9 15.17l-2.52-.79c-.55-.17-.56-.55.11-.81l9.86-3.8c.46-.17.86.11.29.23z"/></svg>
+      </div>
+      <div>
+        <div class="tg-title">Bot Telegram — P.I.E.N.A.H.</div>
+        <div class="tg-sub">Ricevi lo stato dei posti direttamente su Telegram</div>
+      </div>
+    </div>
+    <ul class="steps">
+      <li class="step"><span class="step-num">1</span><span>Apri Telegram e cerca <strong>@pienah_bot</strong></span></li>
+      <li class="step"><span class="step-num">2</span><span>Invia <code>/start</code> per avviare il bot</span></li>
+      <li class="step"><span class="step-num">3</span><span>Usa i comandi per interrogare lo stato in tempo reale</span></li>
+    </ul>
+    <a class="tg-btn" href="https://t.me/pienah_bot" onclick="var a=document.createElement('a');a.href='tg://resolve?domain=pienah_bot';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){window.open('https://t.me/pienah_bot','_blank')},500);return false;">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.7 8.02c-.12.56-.46.7-.93.44l-2.57-1.89-1.24 1.19c-.14.14-.26.26-.53.26l.19-2.67 4.87-4.4c.21-.19-.05-.29-.32-.1L7.9 15.17l-2.52-.79c-.55-.17-.56-.55.11-.81l9.86-3.8c.46-.17.86.11.29.23z"/></svg>
+      Apri su Telegram
+    </a>
+    <div class="cmds">
+      <div class="cmd-box"><code>/posti</code><p>Stato completo di tutti i posti</p></div>
+      <div class="cmd-box"><code>/liberi</code><p>Solo i posti liberi disponibili</p></div>
+      <div class="cmd-box"><code>/occupazione</code><p>Percentuale di occupazione attuale</p></div>
+      <div class="cmd-box"><code>/help</code><p>Lista completa dei comandi</p></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const REFRESH_MS = 10_000;
+const SEATS_PER_TABLE = 4;
+const SEGMENT_LABELS = ['Persona', 'Laptop', 'Zaino'];
+
+let currentFilter = 'all';
+let lastData = null;
+
+const tooltip = document.getElementById('tooltip');
+
+function getSeatClass(s, threshold) {
+  if (!s.occupied) return 'free';
+  if (s.seat_overlap_ratio <= threshold) {
+    if (s.occupated_by_segment_id === 2) return 'backpack';
+    if (s.occupated_by_segment_id === 1) return 'laptop';
+    return 'part';
+  }
+  if (s.occupated_by_segment_id === 1) return 'laptop';
+  if (s.occupated_by_segment_id === 2) return 'backpack';
+  return 'occ';
+}
+
+function seatMatchesFilter(s, threshold) {
+  if (currentFilter === 'all') return true;
+  if (currentFilter === 'free') return !s.occupied;
+  if (currentFilter === 'occupied') return s.occupied;
+  if (currentFilter === 'person') return s.occupied && (s.occupated_by_segment_id === 0 || s.occupated_by_segment_id === null);
+  if (currentFilter === 'laptop') return s.occupied && s.occupated_by_segment_id === 1;
+  if (currentFilter === 'backpack') return s.occupied && s.occupated_by_segment_id === 2;
+  return true;
+}
+
+function buildTooltip(s, threshold) {
+  let html = `<strong>Posto ${s.seat_id}</strong>`;
+  if (!s.occupied) {
+    html += `<span style="color:var(--green)">Libero</span>`;
+  } else {
+    const seg = s.occupated_by_segment_id !== null ? SEGMENT_LABELS[s.occupated_by_segment_id] || '?' : '?';
+    const overlap = Math.round(s.seat_overlap_ratio * 100);
+    const status = s.seat_overlap_ratio > threshold ? 'Occupato' : 'Parziale';
+    html += `${status} — ${seg}<br><span style="color:var(--hint);font-family:'DM Mono',monospace">overlap: ${overlap}%</span>`;
+  }
+  return html;
+}
+
+function makeSeatEl(s, threshold) {
+  const el = document.createElement('div');
+  el.className = 'seat ' + getSeatClass(s, threshold);
+  if (!seatMatchesFilter(s, threshold)) el.classList.add('dimmed');
+  el.textContent = s.seat_id;
+
+  el.addEventListener('mouseenter', (e) => {
+    tooltip.innerHTML = buildTooltip(s, threshold);
+    tooltip.style.display = 'block';
+    positionTooltip(e);
+  });
+  el.addEventListener('mousemove', positionTooltip);
+  el.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+
+  return el;
+}
+
+function positionTooltip(e) {
+  const tw = tooltip.offsetWidth || 180;
+  const th = tooltip.offsetHeight || 60;
+  let x = e.clientX + 14;
+  let y = e.clientY - 10;
+  if (x + tw > window.innerWidth - 10) x = e.clientX - tw - 14;
+  if (y + th > window.innerHeight - 10) y = e.clientY - th - 10;
+  tooltip.style.left = x + 'px';
+  tooltip.style.top  = y + 'px';
+}
+
+function renderTables(seats, threshold) {
+  const grid = document.getElementById('tables-grid');
+  grid.innerHTML = '';
+
+  const tables = {};
+  seats.forEach(s => {
+    const tid = Math.floor((s.seat_id - 1) / SEATS_PER_TABLE) + 1;
+    if (!tables[tid]) tables[tid] = [];
+    tables[tid].push(s);
+  });
+
+  Object.entries(tables).forEach(([tid, tableSeats]) => {
+    const card = document.createElement('div');
+    card.className = 'table-card';
+
+    const label = document.createElement('div');
+    label.className = 'table-label';
+    label.textContent = `TAVOLO ${tid}`;
+    card.appendChild(label);
+
+    const topRow = document.createElement('div');
+    topRow.className = 'seats-row';
+    tableSeats.slice(0, 2).forEach(s => topRow.appendChild(makeSeatEl(s, threshold)));
+    card.appendChild(topRow);
+
+    const tableRect = document.createElement('div');
+    tableRect.className = 'table-rect';
+    card.appendChild(tableRect);
+
+    const botRow = document.createElement('div');
+    botRow.className = 'seats-row';
+    tableSeats.slice(2).forEach(s => botRow.appendChild(makeSeatEl(s, threshold)));
+    card.appendChild(botRow);
+
+    grid.appendChild(card);
+  });
+}
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentFilter = btn.dataset.filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (lastData) renderTables(lastData.seats, lastData.threshold);
+  });
+});
+
+async function refresh() {
+  try {
+    const res  = await fetch('/api/status');
+    const data = await res.json();
+    lastData = data;
+    const { stats, seats, threshold } = data;
+
+    document.getElementById('m-part-sub').textContent = `overlap ≤ ${Math.round(threshold * 100)}%`;
+    document.getElementById('ts').textContent        = 'Aggiornato alle ' + stats.last_updated;
+    document.getElementById('m-total').textContent   = stats.total;
+    document.getElementById('m-occ').textContent     = stats.occupied;
+    document.getElementById('m-part').textContent    = stats.partial;
+    document.getElementById('m-free').textContent    = stats.free;
+    document.getElementById('m-occ-pct').textContent = Math.round(stats.occupied / stats.total * 100) + '% del totale';
+    document.getElementById('m-free-pct').textContent= Math.round(stats.free    / stats.total * 100) + '% del totale';
+    document.getElementById('occ-label').textContent = stats.occupancy_pct + '%';
+
+    const t = stats.total;
+    document.getElementById('bar-occ').style.width   = (stats.occupied / t * 100).toFixed(1) + '%';
+    document.getElementById('bar-part').style.width  = (stats.partial  / t * 100).toFixed(1) + '%';
+    document.getElementById('bar-free').style.width  = (stats.free     / t * 100).toFixed(1) + '%';
+
+    renderTables(seats, threshold);
+  } catch(e) { console.error('Errore aggiornamento:', e); }
+}
+
+refresh();
+setInterval(refresh, REFRESH_MS);
+</script>
+</body>
+</html>
