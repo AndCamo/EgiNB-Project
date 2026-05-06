@@ -55,6 +55,8 @@ ultralytics==8.4.45
 ultralytics-thop==2.0.19
 urllib3==2.6.3
 flask>=3.0.0
+fastapi>=0.115.0
+uvicorn>=0.30.0
 flask-cors>=4.0.0
 icalendar>=5.0.0
 requests>=2.31.0
