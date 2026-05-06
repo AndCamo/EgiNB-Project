@@ -1,0 +1,296 @@
+[
+    {
+        "seat_id": 1,
+        "occupied": true,
+        "seat_overlap_ratio": 0.5373544569574347,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 2,
+        "occupied": true,
+        "seat_overlap_ratio": 0.46475346687211094,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 3,
+        "occupied": true,
+        "seat_overlap_ratio": 0.48671328671328673,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 4,
+        "occupied": true,
+        "seat_overlap_ratio": 0.5489211706900236,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 5,
+        "occupied": true,
+        "seat_overlap_ratio": 0.544047619047619,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 6,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 7,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 8,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 9,
+        "occupied": true,
+        "seat_overlap_ratio": 0.5442339966434908,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 10,
+        "occupied": true,
+        "seat_overlap_ratio": 0.6943793911007026,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 11,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 12,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 13,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 14,
+        "occupied": true,
+        "seat_overlap_ratio": 0.6609336609336609,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 15,
+        "occupied": true,
+        "seat_overlap_ratio": 0.4275,
+        "occupated_by_segment_id": 24
+    },
+    {
+        "seat_id": 16,
+        "occupied": true,
+        "seat_overlap_ratio": 0.6755852842809364,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 17,
+        "occupied": true,
+        "seat_overlap_ratio": 0.73375,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 18,
+        "occupied": true,
+        "seat_overlap_ratio": 0.928654970760234,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 19,
+        "occupied": true,
+        "seat_overlap_ratio": 0.31595866819747415,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 20,
+        "occupied": true,
+        "seat_overlap_ratio": 0.4631484794275492,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 21,
+        "occupied": true,
+        "seat_overlap_ratio": 0.7813186813186813,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 22,
+        "occupied": true,
+        "seat_overlap_ratio": 0.632890365448505,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 23,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 24,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 25,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 26,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 27,
+        "occupied": true,
+        "seat_overlap_ratio": 0.8138736263736264,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 28,
+        "occupied": true,
+        "seat_overlap_ratio": 0.11428571428571428,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 29,
+        "occupied": true,
+        "seat_overlap_ratio": 0.42312834224598933,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 30,
+        "occupied": true,
+        "seat_overlap_ratio": 0.48579545454545453,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 31,
+        "occupied": true,
+        "seat_overlap_ratio": 0.8453703703703703,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 32,
+        "occupied": true,
+        "seat_overlap_ratio": 0.18583333333333332,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 33,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 34,
+        "occupied": true,
+        "seat_overlap_ratio": 0.4583333333333333,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 35,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 36,
+        "occupied": true,
+        "seat_overlap_ratio": 0.46316877746187646,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 37,
+        "occupied": true,
+        "seat_overlap_ratio": 0.13435495367070563,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 38,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 39,
+        "occupied": true,
+        "seat_overlap_ratio": 0.9103498542274052,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 40,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 41,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 42,
+        "occupied": true,
+        "seat_overlap_ratio": 0.7717633928571429,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 43,
+        "occupied": true,
+        "seat_overlap_ratio": 0.8939144736842105,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 44,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 45,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 46,
+        "occupied": true,
+        "seat_overlap_ratio": 0.5061141304347826,
+        "occupated_by_segment_id": 24
+    },
+    {
+        "seat_id": 47,
+        "occupied": true,
+        "seat_overlap_ratio": 0.7772727272727272,
+        "occupated_by_segment_id": 0
+    },
+    {
+        "seat_id": 48,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 49,
+        "occupied": true,
+        "seat_overlap_ratio": 0.10031347962382445,
+        "occupated_by_segment_id": 0
+    }
+]
