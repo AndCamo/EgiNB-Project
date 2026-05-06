@@ -14,12 +14,31 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 
+THRESHOLD = 0.3
+
+
 def _fetch(api_url: str) -> dict | None:
-    """Fetch data from the Flask API. Returns None on error."""
+    """Fetch seats array from Arduino API and return a normalized dict."""
     try:
         r = requests.get(api_url, timeout=5)
         r.raise_for_status()
-        return r.json()
+        seats = r.json()
+        total    = len(seats)
+        occupied = sum(1 for s in seats if s["occupied"] and s["seat_overlap_ratio"] > THRESHOLD)
+        partial  = sum(1 for s in seats if s["occupied"] and s["seat_overlap_ratio"] <= THRESHOLD)
+        free     = total - occupied - partial
+        return {
+            "seats": seats,
+            "threshold": THRESHOLD,
+            "stats": {
+                "total": total,
+                "occupied": occupied,
+                "partial": partial,
+                "free": free,
+                "occupancy_pct": round((occupied + partial) / total * 100, 1) if total else 0.0,
+                "last_updated": "—",
+            },
+        }
     except Exception as e:
         print(f"[bot] Errore fetch API: {e}")
         return None

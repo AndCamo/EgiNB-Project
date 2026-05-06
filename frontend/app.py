@@ -225,7 +225,7 @@ if __name__ == "__main__":
         if bot_token:
             bot_thread = threading.Thread(
                 target=start_bot,
-                args=(bot_token, "http://127.0.0.1:5000/api/status"),
+                args=(bot_token, "http://10.109.235.6:7000/api/status"),
                 daemon=True,
             )
             bot_thread.start()

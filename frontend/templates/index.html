@@ -475,12 +475,24 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
   });
 });
 
+const THRESHOLD = 0.3;
+
 async function refresh() {
   try {
-    const res  = await fetch('/api/status');
-    const data = await res.json();
-    lastData = data;
-    const { stats, seats, threshold } = data;
+    const res   = await fetch('http://10.109.235.6:7000/api/status');
+    const seats = await res.json();
+
+    const total    = seats.length;
+    const occupied = seats.filter(s => s.occupied && s.seat_overlap_ratio > THRESHOLD).length;
+    const partial  = seats.filter(s => s.occupied && s.seat_overlap_ratio <= THRESHOLD).length;
+    const free     = total - occupied - partial;
+    const stats = {
+      total, occupied, partial, free,
+      occupancy_pct: total ? Math.round((occupied + partial) / total * 1000) / 10 : 0,
+      last_updated: new Date().toLocaleTimeString('it-IT'),
+    };
+    const threshold = THRESHOLD;
+    lastData = { stats, seats, threshold };
 
     document.getElementById('m-part-sub').textContent = `overlap ≤ ${Math.round(threshold * 100)}%`;
     document.getElementById('ts').textContent        = 'Aggiornato alle ' + stats.last_updated;
