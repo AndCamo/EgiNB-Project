@@ -36,7 +36,7 @@ except ImportError:
 app = Flask(__name__)
 
 # ── Config ────────────────────────────────────────────────────────────────────
-RESULTS_PATH      = Path(os.getenv("RESULTS_PATH", "occupation_results.json"))
+RESULTS_PATH = Path(__file__).parent / "../backend/output/occupation_results.json"
 OVERLAP_THRESHOLD = float(os.getenv("OVERLAP_THRESHOLD", "0.3"))
 TZ                = pytz.timezone("Europe/Rome")
 
