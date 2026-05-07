@@ -108,6 +108,20 @@ def classroom_status(room_id, detection_model, detection_args):
     
     result = results[0]
     
+    # --- OPTIONAL: Save the segmented image (for debugging purposes) ---
+    annotated_img = result.plot(boxes=False, masks=True, labels=False, conf=False)  # Get the annotated image with masks only (no bounding boxes)
+    annotated_img_rgb = cv2.cvtColor(annotated_img, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB for correct color display in matplotlib
+    
+    plt.title(f"Classroom {room_id} - Segmentation Results")
+    plt.imshow(annotated_img_rgb)
+    plt.xlabel(f"Detections: {len(result.boxes)}")
+    plt.tight_layout()
+    
+    # Save the image using matplotlib
+    output_path = BASE_DIR / "output" / f"classroom_{room_id}_segmentation.png"
+    plt.imsave(output_path, annotated_img_rgb)    
+
+    
     # Compute the detections mask and info
     detections_mask, detections_info = compute_detections_mask_info(result)
     
@@ -125,6 +139,7 @@ def classroom_status(room_id, detection_model, detection_args):
     # Analyze the occupation of each seat
     seats_list = seats_data['seats']
     occupation_results = [] # Dictionary to store occupation info for each seat
+    cls_mapping = {0: "person", 63: "laptop", 24: "backpack"}
     
     for seat in seats_list:
         seat_id = seat['id']
@@ -139,7 +154,6 @@ def classroom_status(room_id, detection_model, detection_args):
         cv2.rectangle(seat_mask, (x_min, y_min), (x_max, y_max), 1, thickness=-1)
         
         seat_occupation_info = get_seat_occupation(seat_mask, detections_mask)
-        cls_mapping = {0: "person", 63: "laptop", 24: "backpack"}
         
         if seat_occupation_info is not None:
             seat_occupation_result = {
