@@ -141,17 +141,25 @@ def classroom_status(room_id, detection_model, detection_args):
     occupation_results = [] # Dictionary to store occupation info for each seat
     cls_mapping = {0: "person", 63: "laptop", 24: "backpack"}
     
+    
     for seat in seats_list:
         seat_id = seat['id']
-        # Get the bounding box coordinates for the seat
-        x_coords = [pt['x'] for pt in seat['points']]
-        y_coords = [pt['y'] for pt in seat['points']]
-        x_min, x_max = int(min(x_coords)), int(max(x_coords))
-        y_min, y_max = int(min(y_coords)), int(max(y_coords))
+        seat_mask_type = seat['type']  # "rect" or "polygon"
         
-        # Create a binary mask for the current seat (1 for seat area, 0 for background)
-        seat_mask = np.zeros(result.orig_shape, dtype=np.uint8)
-        cv2.rectangle(seat_mask, (x_min, y_min), (x_max, y_max), 1, thickness=-1)
+        # Get the bounding box coordinates for the seat based on the seat mask type
+        if seat_mask_type == "rect":
+            x_coords = [pt['x'] for pt in seat['points']]
+            y_coords = [pt['y'] for pt in seat['points']]
+            x_min, x_max = int(min(x_coords)), int(max(x_coords))
+            y_min, y_max = int(min(y_coords)), int(max(y_coords))
+        
+            # Create a binary mask for the current seat (1 for seat area, 0 for background)
+            seat_mask = np.zeros(result.orig_shape, dtype=np.uint8)
+            cv2.rectangle(seat_mask, (x_min, y_min), (x_max, y_max), 1, thickness=-1)
+        elif seat_mask_type == "freehand": # Mask is a freehand polygon defined by a list of points
+            polygon_points = np.array([[pt['x'], pt['y']] for pt in seat['points']], dtype=np.int32)
+            seat_mask = np.zeros(result.orig_shape, dtype=np.uint8)
+            cv2.fillPoly(seat_mask, [polygon_points], 1)
         
         seat_occupation_info = get_seat_occupation(seat_mask, detections_mask)
         
@@ -172,10 +180,3 @@ def classroom_status(room_id, detection_model, detection_args):
         occupation_results.append(seat_occupation_result)
     
     return occupation_results
-    
-    
-    
-    
-    
-
-    

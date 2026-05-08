@@ -1,0 +1,14 @@
+[
+    {
+        "seat_id": 1,
+        "occupied": true,
+        "seat_overlap_ratio": 0.22090641403149405,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 2,
+        "occupied": true,
+        "seat_overlap_ratio": 0.23104934601664684,
+        "occupated_by_segment_id": "person"
+    }
+]
