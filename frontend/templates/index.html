@@ -357,7 +357,13 @@
 <script>
 const REFRESH_MS = 10_000;
 const SEATS_PER_TABLE = 4;
-const SEGMENT_LABELS = ['Persona', 'Laptop', 'Zaino'];
+
+// Backend returns string segment IDs: "person", "laptop", "backpack"
+const SEGMENT_LABELS = {
+  'person':   'Persona',
+  'laptop':   'Laptop',
+  'backpack': 'Zaino',
+};
 
 let currentFilter = 'all';
 let lastData = null;
@@ -366,23 +372,21 @@ const tooltip = document.getElementById('tooltip');
 
 function getSeatClass(s, threshold) {
   if (!s.occupied) return 'free';
-  if (s.seat_overlap_ratio <= threshold) {
-    if (s.occupated_by_segment_id === 2) return 'backpack';
-    if (s.occupated_by_segment_id === 1) return 'laptop';
-    return 'part';
-  }
-  if (s.occupated_by_segment_id === 1) return 'laptop';
-  if (s.occupated_by_segment_id === 2) return 'backpack';
+  const seg = s.occupated_by_segment_id;
+  if (seg === 'backpack') return 'backpack';
+  if (seg === 'laptop')   return 'laptop';
+  // person: distinguish full vs partial by overlap ratio
+  if (s.seat_overlap_ratio <= threshold) return 'part';
   return 'occ';
 }
 
 function seatMatchesFilter(s, threshold) {
-  if (currentFilter === 'all') return true;
-  if (currentFilter === 'free') return !s.occupied;
+  if (currentFilter === 'all')      return true;
+  if (currentFilter === 'free')     return !s.occupied;
   if (currentFilter === 'occupied') return s.occupied;
-  if (currentFilter === 'person') return s.occupied && (s.occupated_by_segment_id === 0 || s.occupated_by_segment_id === null);
-  if (currentFilter === 'laptop') return s.occupied && s.occupated_by_segment_id === 1;
-  if (currentFilter === 'backpack') return s.occupied && s.occupated_by_segment_id === 2;
+  if (currentFilter === 'person')   return s.occupied && s.occupated_by_segment_id === 'person';
+  if (currentFilter === 'laptop')   return s.occupied && s.occupated_by_segment_id === 'laptop';
+  if (currentFilter === 'backpack') return s.occupied && s.occupated_by_segment_id === 'backpack';
   return true;
 }
 
@@ -391,7 +395,7 @@ function buildTooltip(s, threshold) {
   if (!s.occupied) {
     html += `<span style="color:var(--green)">Libero</span>`;
   } else {
-    const seg = s.occupated_by_segment_id !== null ? SEGMENT_LABELS[s.occupated_by_segment_id] || '?' : '?';
+    const seg = SEGMENT_LABELS[s.occupated_by_segment_id] || s.occupated_by_segment_id || '?';
     const overlap = Math.round(s.seat_overlap_ratio * 100);
     const status = s.seat_overlap_ratio > threshold ? 'Occupato' : 'Parziale';
     html += `${status} — ${seg}<br><span style="color:var(--hint);font-family:'DM Mono',monospace">overlap: ${overlap}%</span>`;
@@ -479,19 +483,33 @@ const THRESHOLD = 0.3;
 
 async function refresh() {
   try {
-    const res   = await fetch('http://10.109.235.6:7000/api/status');
-    const seats = await res.json();
+    const res  = await fetch('http://localhost:8080/api/status?classroom_id=0');
+    const data = await res.json();
+    // Il backend restituisce direttamente un array
+const seats = Array.isArray(data) ? data : [];
+const threshold = THRESHOLD;
 
-    const total    = seats.length;
-    const occupied = seats.filter(s => s.occupied && s.seat_overlap_ratio > THRESHOLD).length;
-    const partial  = seats.filter(s => s.occupied && s.seat_overlap_ratio <= THRESHOLD).length;
-    const free     = total - occupied - partial;
-    const stats = {
-      total, occupied, partial, free,
-      occupancy_pct: total ? Math.round((occupied + partial) / total * 1000) / 10 : 0,
-      last_updated: new Date().toLocaleTimeString('it-IT'),
-    };
-    const threshold = THRESHOLD;
+// Calcolo stats lato frontend
+
+const total    = seats.length;
+const occupied = seats.filter(
+  s => s.occupied && s.seat_overlap_ratio > threshold
+).length;
+const partial = seats.filter(
+  s => s.occupied && s.seat_overlap_ratio <= threshold
+).length;
+const free = total - occupied - partial;
+const stats = {
+  total,
+  occupied,
+  partial,
+  free,
+  occupancy_pct: total
+    ? Math.round(((occupied + partial) / total) * 1000) / 10
+    : 0,
+  last_updated: new Date().toLocaleTimeString('it-IT'),
+};
+
     lastData = { stats, seats, threshold };
 
     document.getElementById('m-part-sub').textContent = `overlap ≤ ${Math.round(threshold * 100)}%`;
