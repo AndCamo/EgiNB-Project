@@ -4,21 +4,15 @@ from ultralytics import YOLO
 import json
 from pathlib import Path
 import time
-from datetime import datetime
 
 import uvicorn
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
 
 BASE_DIR = Path(__file__).parent
 
 # initialize FastAPI server
 app = FastAPI()
-
-# Setup templates
-templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 app.add_middleware(
     CORSMiddleware,
@@ -39,8 +33,8 @@ model = YOLO(str(model_path))
 
 # API endpoint to get the status of a classroom
 # ATTENTION: the classroom_id should be passed as a query parameter, e.g., /api/status?classroom_id=1
-@app.get("/api/status", response_class=HTMLResponse)
-async def get_classroom_status(request: Request, classroom_id: int):
+@app.get("/api/status")
+async def get_classroom_status(classroom_id: int):
     # check if the classroom_id is provided and valid
     if classroom_id is None or not isinstance(classroom_id, int) or classroom_id < 0:
         raise HTTPException(status_code=400, detail="Invalid classroom ID")
@@ -78,24 +72,7 @@ async def get_classroom_status(request: Request, classroom_id: int):
         with open(json_path) as f:
             occupation_results = json.load(f)
             
-    # Compute statistics for the template
-    total_seats = len(occupation_results)
-    occupied_seats = sum(1 for s in occupation_results if s["occupied"])
-    free_seats = total_seats - occupied_seats
-    timestamp = datetime.fromtimestamp(current_time).strftime("%H:%M:%S")
-
-    return templates.TemplateResponse(
-        request=request,
-        name="status.html",
-        context={
-            "classroom_id": classroom_id,
-            "seats": occupation_results,
-            "total_seats": total_seats,
-            "occupied_seats": occupied_seats,
-            "free_seats": free_seats,
-            "timestamp": timestamp
-        }
-    )
+    return occupation_results
         
         
 

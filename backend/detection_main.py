@@ -156,7 +156,7 @@ def classroom_status(room_id, detection_model, detection_args):
             # Create a binary mask for the current seat (1 for seat area, 0 for background)
             seat_mask = np.zeros(result.orig_shape, dtype=np.uint8)
             cv2.rectangle(seat_mask, (x_min, y_min), (x_max, y_max), 1, thickness=-1)
-        elif seat_mask_type == "freehand": # Mask is a freehand polygon defined by a list of points
+        elif seat_mask_type == "freehand" or seat_mask_type == "poly": # Mask is a freehand polygon defined by a list of points
             polygon_points = np.array([[pt['x'], pt['y']] for pt in seat['points']], dtype=np.int32)
             seat_mask = np.zeros(result.orig_shape, dtype=np.uint8)
             cv2.fillPoly(seat_mask, [polygon_points], 1)
