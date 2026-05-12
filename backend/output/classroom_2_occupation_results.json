@@ -1,0 +1,380 @@
+[
+    {
+        "seat_id": 1,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 2,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 3,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 4,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 5,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 6,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 7,
+        "occupied": true,
+        "seat_overlap_ratio": 0.37593582887700533,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 8,
+        "occupied": true,
+        "seat_overlap_ratio": 0.06237027812370278,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 9,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 10,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 11,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 12,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 13,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 14,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 15,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 16,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 17,
+        "occupied": true,
+        "seat_overlap_ratio": 0.4749525339564773,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 18,
+        "occupied": true,
+        "seat_overlap_ratio": 0.11633234904795846,
+        "occupated_by_segment_id": "laptop"
+    },
+    {
+        "seat_id": 19,
+        "occupied": true,
+        "seat_overlap_ratio": 0.05310892940626461,
+        "occupated_by_segment_id": "laptop"
+    },
+    {
+        "seat_id": 20,
+        "occupied": true,
+        "seat_overlap_ratio": 0.6290123738642072,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 21,
+        "occupied": true,
+        "seat_overlap_ratio": 0.3710117939168219,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 22,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 23,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 24,
+        "occupied": true,
+        "seat_overlap_ratio": 0.09269590593082139,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 25,
+        "occupied": true,
+        "seat_overlap_ratio": 0.2847222222222222,
+        "occupated_by_segment_id": "backpack"
+    },
+    {
+        "seat_id": 26,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 27,
+        "occupied": true,
+        "seat_overlap_ratio": 0.6071049840933191,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 28,
+        "occupied": true,
+        "seat_overlap_ratio": 0.44590686274509805,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 29,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 30,
+        "occupied": true,
+        "seat_overlap_ratio": 0.5325258573761568,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 31,
+        "occupied": true,
+        "seat_overlap_ratio": 0.5160792277519681,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 32,
+        "occupied": true,
+        "seat_overlap_ratio": 0.4496772161864273,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 33,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 34,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 35,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 36,
+        "occupied": true,
+        "seat_overlap_ratio": 0.11913084553613604,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 37,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 38,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 39,
+        "occupied": true,
+        "seat_overlap_ratio": 0.5723428672316384,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 40,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 41,
+        "occupied": true,
+        "seat_overlap_ratio": 0.04257465698143664,
+        "occupated_by_segment_id": "laptop"
+    },
+    {
+        "seat_id": 42,
+        "occupied": true,
+        "seat_overlap_ratio": 0.11667265658182768,
+        "occupated_by_segment_id": "laptop"
+    },
+    {
+        "seat_id": 43,
+        "occupied": true,
+        "seat_overlap_ratio": 0.026760981400870597,
+        "occupated_by_segment_id": "laptop"
+    },
+    {
+        "seat_id": 44,
+        "occupied": true,
+        "seat_overlap_ratio": 0.13484366719660837,
+        "occupated_by_segment_id": "laptop"
+    },
+    {
+        "seat_id": 45,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 46,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 47,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 48,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 49,
+        "occupied": true,
+        "seat_overlap_ratio": 0.17570208930434167,
+        "occupated_by_segment_id": "backpack"
+    },
+    {
+        "seat_id": 50,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 51,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 52,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 53,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 54,
+        "occupied": true,
+        "seat_overlap_ratio": 0.12152300824175824,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 55,
+        "occupied": true,
+        "seat_overlap_ratio": 0.544529432814457,
+        "occupated_by_segment_id": "person"
+    },
+    {
+        "seat_id": 56,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 57,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 58,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 59,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 60,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 61,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 62,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 63,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    }
+]

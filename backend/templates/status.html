@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stato Aula {{ classroom_id }} — EgiNB Project</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=DM+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f7f6f3;
+            --surface: #ffffff;
+            --border: rgba(0,0,0,0.1);
+            --text: #1a1a18;
+            --muted: #6b6b65;
+            --green: #2D7A4F;
+            --red: #C0392B;
+            --radius: 12px;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 20px var(--border);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 10px;
+        }
+
+        .seat {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-family: 'DM Mono', monospace;
+            transition: transform 0.2s;
+            position: relative;
+            border: 1px solid var(--border);
+        }
+
+        .seat:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .seat.free {
+            background-color: #e8f5e9;
+            color: var(--green);
+            border-color: #c8e6c9;
+        }
+
+        .seat.occupied {
+            background-color: #ffebee;
+            color: var(--red);
+            border-color: #ffcdd2;
+        }
+
+        .seat-id {
+            font-weight: 600;
+        }
+
+        .seat-info {
+            font-size: 0.6rem;
+            margin-top: 2px;
+            opacity: 0.8;
+        }
+
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Stato Aula {{ classroom_id }}</h1>
+            <div class="ts">Aggiornato: {{ timestamp }}</div>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card">
+                <span class="stat-val">{{ total_seats }}</span>
+                <span class="stat-label">Totali</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-val" style="color: var(--red)">{{ occupied_seats }}</span>
+                <span class="stat-label">Occupati</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-val" style="color: var(--green)">{{ free_seats }}</span>
+                <span class="stat-label">Liberi</span>
+            </div>
+        </div>
+
+        <div class="seat-grid">
+            {% for seat in seats %}
+            <div class="seat {{ 'occupied' if seat.occupied else 'free' }}" 
+                 title="Overlap: {{ (seat.seat_overlap_ratio * 100)|round(1) }}% - {{ seat.occupated_by_segment_id or 'Libero' }}">
+                <span class="seat-id">#{{ seat.seat_id }}</span>
+                <span class="seat-info">{{ seat.occupated_by_segment_id if seat.occupied else 'OK' }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="footer">
+        Progetto EgiNB &copy; 2026 — Powered by YOLOv8 Seg
+    </div>
+</body>
+</html>
