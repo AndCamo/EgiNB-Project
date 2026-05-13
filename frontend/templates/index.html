@@ -209,6 +209,10 @@
   .cmd-box p    { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
   @media(max-width:560px){
+    .logo { font-size: 28px; }
+    .logo img { height: 50px !important; }
+    nav { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .nav-right { width: 100%; justify-content: space-between; }
     .aule-banner { flex-direction: column; align-items: flex-start; }
     .aule-banner-btn { width: 100%; justify-content: center; }
     .cmds { grid-template-columns: 1fr; }
@@ -409,16 +413,34 @@ function makeSeatEl(s, threshold) {
   if (!seatMatchesFilter(s, threshold)) el.classList.add('dimmed');
   el.textContent = s.seat_id;
 
-  el.addEventListener('mouseenter', (e) => {
+  // Mostra tooltip al click/touch
+  el.addEventListener('click', (e) => {
+    e.stopPropagation(); // Evita che il click sul body chiuda subito il tooltip
     tooltip.innerHTML = buildTooltip(s, threshold);
     tooltip.style.display = 'block';
     positionTooltip(e);
   });
-  el.addEventListener('mousemove', positionTooltip);
-  el.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+
+  // Supporto hover per desktop
+  el.addEventListener('mouseenter', (e) => {
+    if (window.matchMedia("(pointer: fine)").matches) {
+      tooltip.innerHTML = buildTooltip(s, threshold);
+      tooltip.style.display = 'block';
+      positionTooltip(e);
+    }
+  });
+
+  el.addEventListener('mousemove', (e) => {
+    if (window.matchMedia("(pointer: fine)").matches) positionTooltip(e);
+  });
 
   return el;
 }
+
+// Chiudi tooltip cliccando ovunque
+document.addEventListener('click', () => {
+  tooltip.style.display = 'none';
+});
 
 function positionTooltip(e) {
   const tw = tooltip.offsetWidth || 180;
@@ -483,7 +505,7 @@ const THRESHOLD = 0.3;
 
 async function refresh() {
   try {
-    const res  = await fetch('http://localhost:8080/api/status?classroom_id=0');
+    const res  = await fetch(`http://${window.location.hostname}:8080/api/status?classroom_id=2`);
     const data = await res.json();
     // Il backend restituisce direttamente un array
 const seats = Array.isArray(data) ? data : [];

@@ -225,7 +225,7 @@ if __name__ == "__main__":
         if bot_token:
             bot_thread = threading.Thread(
                 target=start_bot,
-                args=(bot_token, "http://10.109.235.6:7000/api/status"),
+                args=(bot_token, "http://127.0.0.1:5001/api/status"),
                 daemon=True,
             )
             bot_thread.start()
@@ -233,7 +233,7 @@ if __name__ == "__main__":
         else:
             print("⚠️  TELEGRAM_BOT_TOKEN non impostato — bot non avviato")
 
-    print("🚀 Server unificato su http://localhost:5000")
-    print("   /       → P.I.E.N.A.H. dashboard")
-    print("   /aule   → Aule Libere UniTo")
-    app.run(debug=True, use_reloader=False, port=5000)
+    print("🚀 Server unificato avviato")
+    print("   Locale:   http://127.0.0.1:5001")
+    print("   Network:  Apri l'app usando l'IP locale del tuo PC (es. http://192.168.1.X:5001)")
+    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5001)

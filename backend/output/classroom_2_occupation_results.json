@@ -38,14 +38,14 @@
     {
         "seat_id": 7,
         "occupied": true,
-        "seat_overlap_ratio": 0.37593582887700533,
+        "seat_overlap_ratio": 0.5719903206291591,
         "occupated_by_segment_id": "person"
     },
     {
         "seat_id": 8,
-        "occupied": true,
-        "seat_overlap_ratio": 0.06237027812370278,
-        "occupated_by_segment_id": "person"
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
     },
     {
         "seat_id": 9,
@@ -98,31 +98,31 @@
     {
         "seat_id": 17,
         "occupied": true,
-        "seat_overlap_ratio": 0.4749525339564773,
+        "seat_overlap_ratio": 0.6154044141303648,
         "occupated_by_segment_id": "person"
     },
     {
         "seat_id": 18,
         "occupied": true,
-        "seat_overlap_ratio": 0.11633234904795846,
+        "seat_overlap_ratio": 0.22991440156179607,
         "occupated_by_segment_id": "laptop"
     },
     {
         "seat_id": 19,
-        "occupied": true,
-        "seat_overlap_ratio": 0.05310892940626461,
-        "occupated_by_segment_id": "laptop"
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
     },
     {
         "seat_id": 20,
         "occupied": true,
-        "seat_overlap_ratio": 0.6290123738642072,
+        "seat_overlap_ratio": 0.5783744958284988,
         "occupated_by_segment_id": "person"
     },
     {
         "seat_id": 21,
         "occupied": true,
-        "seat_overlap_ratio": 0.3710117939168219,
+        "seat_overlap_ratio": 0.439622641509434,
         "occupated_by_segment_id": "person"
     },
     {
@@ -140,13 +140,13 @@
     {
         "seat_id": 24,
         "occupied": true,
-        "seat_overlap_ratio": 0.09269590593082139,
+        "seat_overlap_ratio": 0.050928300338496255,
         "occupated_by_segment_id": "person"
     },
     {
         "seat_id": 25,
         "occupied": true,
-        "seat_overlap_ratio": 0.2847222222222222,
+        "seat_overlap_ratio": 0.29694223497196504,
         "occupated_by_segment_id": "backpack"
     },
     {
@@ -158,13 +158,13 @@
     {
         "seat_id": 27,
         "occupied": true,
-        "seat_overlap_ratio": 0.6071049840933191,
+        "seat_overlap_ratio": 0.6811499776031275,
         "occupated_by_segment_id": "person"
     },
     {
         "seat_id": 28,
         "occupied": true,
-        "seat_overlap_ratio": 0.44590686274509805,
+        "seat_overlap_ratio": 0.4962240402769037,
         "occupated_by_segment_id": "person"
     },
     {
@@ -176,19 +176,19 @@
     {
         "seat_id": 30,
         "occupied": true,
-        "seat_overlap_ratio": 0.5325258573761568,
+        "seat_overlap_ratio": 0.5936707602048427,
         "occupated_by_segment_id": "person"
     },
     {
         "seat_id": 31,
         "occupied": true,
-        "seat_overlap_ratio": 0.5160792277519681,
+        "seat_overlap_ratio": 0.5374301855816125,
         "occupated_by_segment_id": "person"
     },
     {
         "seat_id": 32,
         "occupied": true,
-        "seat_overlap_ratio": 0.4496772161864273,
+        "seat_overlap_ratio": 0.5048189370110493,
         "occupated_by_segment_id": "person"
     },
     {
@@ -211,9 +211,9 @@
     },
     {
         "seat_id": 36,
-        "occupied": true,
-        "seat_overlap_ratio": 0.11913084553613604,
-        "occupated_by_segment_id": "person"
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
     },
     {
         "seat_id": 37,
@@ -230,7 +230,7 @@
     {
         "seat_id": 39,
         "occupied": true,
-        "seat_overlap_ratio": 0.5723428672316384,
+        "seat_overlap_ratio": 0.6238326484871124,
         "occupated_by_segment_id": "person"
     },
     {
@@ -241,45 +241,45 @@
     },
     {
         "seat_id": 41,
-        "occupied": true,
-        "seat_overlap_ratio": 0.04257465698143664,
-        "occupated_by_segment_id": "laptop"
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
     },
     {
         "seat_id": 42,
         "occupied": true,
-        "seat_overlap_ratio": 0.11667265658182768,
+        "seat_overlap_ratio": 0.08819788719599242,
         "occupated_by_segment_id": "laptop"
     },
     {
         "seat_id": 43,
         "occupied": true,
-        "seat_overlap_ratio": 0.026760981400870597,
+        "seat_overlap_ratio": 0.03424313462826524,
         "occupated_by_segment_id": "laptop"
     },
     {
         "seat_id": 44,
         "occupied": true,
-        "seat_overlap_ratio": 0.13484366719660837,
+        "seat_overlap_ratio": 0.10255522204263834,
         "occupated_by_segment_id": "laptop"
     },
     {
         "seat_id": 45,
-        "occupied": false,
-        "seat_overlap_ratio": 0.0,
-        "occupated_by_segment_id": null
+        "occupied": true,
+        "seat_overlap_ratio": 0.4717333561819895,
+        "occupated_by_segment_id": "laptop"
     },
     {
         "seat_id": 46,
-        "occupied": false,
-        "seat_overlap_ratio": 0.0,
-        "occupated_by_segment_id": null
+        "occupied": true,
+        "seat_overlap_ratio": 0.3881129370979033,
+        "occupated_by_segment_id": "laptop"
     },
     {
         "seat_id": 47,
-        "occupied": false,
-        "seat_overlap_ratio": 0.0,
-        "occupated_by_segment_id": null
+        "occupied": true,
+        "seat_overlap_ratio": 0.2611614111770215,
+        "occupated_by_segment_id": "laptop"
     },
     {
         "seat_id": 48,
@@ -290,7 +290,7 @@
     {
         "seat_id": 49,
         "occupied": true,
-        "seat_overlap_ratio": 0.17570208930434167,
+        "seat_overlap_ratio": 0.2804699398070926,
         "occupated_by_segment_id": "backpack"
     },
     {
@@ -320,13 +320,13 @@
     {
         "seat_id": 54,
         "occupied": true,
-        "seat_overlap_ratio": 0.12152300824175824,
+        "seat_overlap_ratio": 0.129072019721782,
         "occupated_by_segment_id": "person"
     },
     {
         "seat_id": 55,
         "occupied": true,
-        "seat_overlap_ratio": 0.544529432814457,
+        "seat_overlap_ratio": 0.45301786292339835,
         "occupated_by_segment_id": "person"
     },
     {
