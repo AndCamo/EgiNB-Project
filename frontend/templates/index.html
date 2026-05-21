@@ -505,7 +505,7 @@ const THRESHOLD = 0.3;
 
 async function refresh() {
   try {
-    const res  = await fetch(`http://${window.location.hostname}:8080/api/status?classroom_id=2`);
+    const res  = await fetch("http://teamgalassia.local:7000/api/status?classroom_id=2");
     const data = await res.json();
     // Il backend restituisce direttamente un array
 const seats = Array.isArray(data) ? data : [];

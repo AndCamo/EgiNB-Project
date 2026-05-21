@@ -9,23 +9,41 @@ Comandi supportati:
 """
 
 import asyncio
+from datetime import datetime
+import logging
 import requests
 from telegram import Update
+from telegram.error import Conflict
 from telegram.ext import Application, CommandHandler, ContextTypes
+
+# Configura il logging per evitare traceback rumorosi dalla libreria telegram
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.getLogger("telegram").setLevel(logging.ERROR)
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 THRESHOLD = 0.3
 
 
 def _fetch(api_url: str) -> dict | None:
-    """Fetch seats array from Arduino API and return a normalized dict."""
+    """Fetch seats array from API and return a normalized dict."""
     try:
         r = requests.get(api_url, timeout=5)
         r.raise_for_status()
-        seats = r.json()
+        data = r.json()
+
+        # Se l'API restituisce un dizionario con la chiave "seats", usiamo quello
+        if isinstance(data, dict) and "seats" in data:
+            seats = data["seats"]
+        elif isinstance(data, list):
+            seats = data
+        else:
+            print(f"[bot] Formato API non riconosciuto: {type(data)}")
+            return None
+
         total    = len(seats)
-        occupied = sum(1 for s in seats if s["occupied"] and s["seat_overlap_ratio"] > THRESHOLD)
-        partial  = sum(1 for s in seats if s["occupied"] and s["seat_overlap_ratio"] <= THRESHOLD)
+        occupied = sum(1 for s in seats if s.get("occupied") and s.get("seat_overlap_ratio", 0) > THRESHOLD)
+        partial  = sum(1 for s in seats if s.get("occupied") and s.get("seat_overlap_ratio", 0) <= THRESHOLD)
         free     = total - occupied - partial
         return {
             "seats": seats,
@@ -36,7 +54,7 @@ def _fetch(api_url: str) -> dict | None:
                 "partial": partial,
                 "free": free,
                 "occupancy_pct": round((occupied + partial) / total * 100, 1) if total else 0.0,
-                "last_updated": "—",
+                "last_updated": datetime.now().strftime("%H:%M:%S"),
             },
         }
     except Exception as e:
@@ -158,18 +176,28 @@ def start_bot(token: str, api_url: str) -> None:
         application.add_handler(CommandHandler("liberi", cmd_liberi))
         application.add_handler(CommandHandler("occupazione", cmd_occupazione))
 
-        print("[bot] In ascolto su Telegram...")
-        async with application:
-            await application.start()
-            await application.updater.start_polling(allowed_updates=Update.ALL_TYPES)
-            while True:
-                await asyncio.sleep(3600)
+        try:
+            async with application:
+                await application.initialize()
+                await application.start()
+                # drop_pending_updates=True pulisce i messaggi vecchi al riavvio
+                await application.updater.start_polling(allowed_updates=Update.ALL_TYPES, drop_pending_updates=True)
+                print("[bot] ✅ Bot avviato e in ascolto su Telegram")
+                while True:
+                    await asyncio.sleep(3600)
+        except Conflict:
+            print("[bot] ❌ Errore: Il bot è già avviato in un altro processo (Conflict).")
+            print("[bot]    Chiudi eventuali altre istanze del server o processi Python attivi.")
+        except Exception as e:
+            print(f"[bot] ❌ Errore imprevisto: {e}")
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     try:
         loop.run_until_complete(run())
     except Exception as e:
-        print(f"[bot] Errore: {e}")
+        # Questo cattura errori fuori dal loop async principale
+        if not isinstance(e, (asyncio.CancelledError, KeyboardInterrupt)):
+            print(f"[bot] Errore critico loop: {e}")
     finally:
         loop.close()

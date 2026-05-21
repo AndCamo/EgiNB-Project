@@ -10,21 +10,19 @@ Route:
 import json
 import os
 import threading
-
-from dotenv import load_dotenv
-load_dotenv()
+from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime
-from pathlib import Path
+import qrcode
 
+from dotenv import load_dotenv, find_dotenv
 import pytz
 import requests
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, send_from_directory
 from icalendar import Calendar
 
-from flask import send_from_directory
-import os
-
+# Carica il file .env cercandolo nelle cartelle superiori (root del progetto)
+load_dotenv(find_dotenv())
 
 # ── Importa bot Telegram solo se disponibile ──────────────────────────────────
 try:
@@ -32,11 +30,13 @@ try:
     TELEGRAM_AVAILABLE = True
 except ImportError:
     TELEGRAM_AVAILABLE = False
+    print("⚠️  Libreria 'python-telegram-bot' non trovata. Il bot Telegram non sarà disponibile.")
 
 app = Flask(__name__)
 
 # ── Config ────────────────────────────────────────────────────────────────────
-RESULTS_PATH = Path(__file__).parent / "../backend/output/occupation_results.json"
+# Utilizziamo l'aula 2 come default (coerente con index.html)
+RESULTS_PATH = Path(__file__).parent / "../backend/output/classroom_2_occupation_results.json"
 OVERLAP_THRESHOLD = float(os.getenv("OVERLAP_THRESHOLD", "0.3"))
 TZ                = pytz.timezone("Europe/Rome")
 
@@ -75,6 +75,20 @@ def compute_stats(results: list[dict]) -> dict:
         "occupancy_pct": round((occupied + partial) / total * 100, 1) if total else 0,
         "last_updated": datetime.now().strftime("%H:%M:%S"),
     }
+
+def generate_qr_code(data: str):
+    qr = qrcode.QRCode(
+        version=2,  # 2 = 25x25 Grid
+        error_correction=qrcode.constants.ERROR_CORRECT_H,  # Max error correction
+        box_size=10,  # Size of each box in pixels
+        border=4,  # Border size in boxes
+    )
+
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+    img.save("qr.png")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -232,8 +246,27 @@ if __name__ == "__main__":
             print("✅ Telegram bot avviato in background")
         else:
             print("⚠️  TELEGRAM_BOT_TOKEN non impostato — bot non avviato")
-
+    
     print("🚀 Server unificato avviato")
     print("   Locale:   http://127.0.0.1:5001")
     print("   Network:  Apri l'app usando l'IP locale del tuo PC (es. http://192.168.1.X:5001)")
+    
+    # generate QR code 
+    
+    # get local IP address
+    import socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.255.255.255', 1))
+        local_ip = s.getsockname()[0]
+    except Exception:
+        local_ip = '127.0.0.1'
+    finally:
+        s.close()
+    app_url = f"http://{local_ip}:5001"
+    generate_qr_code(app_url)
+    print(f"📱 QR code generato per l'accesso rapido: {app_url}")
+
     app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5001)
+    
