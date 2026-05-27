@@ -7,9 +7,13 @@ P.I.E.N.A.H is an Edge AI-powered system designed to analyze and determine seat 
 
 ## 📋 Table of Contents
 - [Overview](#overview)
+- [Usage Example](#usage-example)
 - [Project Structure](#project-structure)
+- [Hardware Architecture](#hardware-architecture)
+- [Software Architecture](#software-architecture)
 - [Backend Logic](#backend-logic)
 - [Installation](#installation)
+- [Credits](#credits)
 
 
 ## 📍 Usage Example
@@ -132,3 +136,14 @@ If [`uv`](https://docs.astral.sh/uv/) is installed:
 
    172.18.106.198
    http://172.18.106.198:5000
+
+## 👥 Credits
+
+Made with ❤️ by:
+- [**Andrea Camoia**](https://github.com/AndCamo)
+- [**Andrea Cavaiuolo**](https://github.com/AndreaCavaiuolo)
+- [**Arianna Rossi**](https://github.com/arianna-rossi)
+- [**Edoardo Pepe**](https://github.com/Ed04rd0P3)
+- [**Franscesco Siviero**](https://github.com/francesco2310)
+- [**Mariapia Marsico**](https://github.com/mariapiamarsico0-dotcom)
+- [**Michael De Leo**](https://github.com/michaeldeleo99)
