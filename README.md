@@ -3,13 +3,50 @@
 <img src="./assets/project-logo.jpg" style="width: 300px; height: auto;" alt="Project Logo">
 
 ## 🔍 Overview
-P.I.E.N.A.H is an AI-powered system designed to analyze and determine seat occupancy in a classroom environment. It leverages a YOLO-based segmentation model to detect objects (such as people, laptops, and backpacks) and maps these detections to predefined seat masks to determine the availability of each seat. The system includes a FastAPI backend for processing and a Python-based frontend with a Telegram bot integration.
+P.I.E.N.A.H is an Edge AI-powered system designed to analyze and determine seat occupancy in a classroom environment. It leverages a YOLO-based segmentation model to detect objects (such as people, laptops, and backpacks) and maps these detections to predefined seat masks to determine the availability of each seat. The entire system is implemented on an Arduino Uno Q Board, ensuring scalability, low cost and privacy by processing data locally without the need for cloud services.
 
 ## 📋 Table of Contents
 - [Overview](#overview)
 - [Project Structure](#project-structure)
 - [Backend Logic](#backend-logic)
 - [Installation](#installation)
+
+
+## 📍 Usage Example
+Starting from an Image acquisition of a classroom/study room, the system evaluates the **occupancy status** by merging two key sources of information:
+1. **YOLO Segmentation Masks**: The model detects and segments objects of interest (people, laptops, backpacks) in the image, generating pixel-level masks for each detected instance.
+2. **Seat Masks**: Each classroom has a predefined JSON configuration that defines the exact polygon coordinates of each seat. The system generates binary masks for these seats based on the provided configurations.
+<img src="assets/masks-example.png" style="width: auto; height: auto;" alt="Masks Example">
+Then the detection algorithm computes the intersection between each seats with an eventual detected object, calculating the percentage of overlap and wich type of object is occupying the seat. For each seat, the possible outcomes are:
+- `free`: No significant overlap with any detected object.
+- `occupied`: Significant overlap with a detected object (person, laptop, backpack). The system also identifies the type of object occupying the seat based on the class of the detected object (e.g., a person, a laptop, or a backpack).
+- `unknown`: If the overlap is ambiguous or below the defined thresholds, the seat status may be marked as `unknown` for further review.
+<img src="assets/output.png" style="width: auto; height: auto;" alt="Occupation Evaluation Output">
+
+Finally, the system exposes a REST API endpoint (`/api/status`) that returns a JSON payload detailing the occupancy status of each seat, ensouring that sensible data is processed locally and only the final occupancy status is shared, preserving privacy and security.
+```json
+[
+    {
+        "seat_id": 1,
+        "occupied": false,
+        "seat_overlap_ratio": 0.0,
+        "occupated_by_segment_id": null
+    },
+    {
+        "seat_id": 2,
+        "occupied": true,
+        "seat_overlap_ratio": 0.44685916919959473,
+        "occupated_by_segment_id": "backpack"
+    },
+    {
+        "seat_id": 3,
+        "occupied": true,
+        "seat_overlap_ratio": 0.1445337526938086,
+        "occupated_by_segment_id": "person"
+    },
+    ...
+]
+```
 
 ## 📁 Project Structure
 ```text
@@ -31,8 +68,18 @@ P.I.E.N.A.H is an AI-powered system designed to analyze and determine seat occup
 └── README.md                # This file
 ```
 
-## ⚙️ Backend Logic
+## 🏗️ Hardware Architecture 
+The system is designed to run on an **Arduino Uno Q Board**, equipped with a Qualcomm MPU and 2GB of RAM, which provides sufficient computational power to handle the YOLO segmentation model and the associated processing tasks. The board is connected to a camera module that captures real-time images of the classroom. The processing pipeline runs locally on the Arduino, ensuring that all image data is processed on-device, thus maintaining privacy and reducing latency.
 
+## Software Architecture
+The software implementation follows a classic client-server architecture, separating the concerns of data processing and user interaction:
+- **Backend (Server)**: handles the core logic of image processing, object detection, and seat occupancy evaluation. It exposes a REST API for the frontend to fetch the occupancy status.
+- **Frontend (Client)**: provides a user interface for visualizing the occupancy status of the classroom. It periodically requests the latest occupancy data from the backend and updates the display accordingly.
+
+<img src="assets/architettura.png" style="width: 90%; height: auto;" alt="Masks Example">
+
+
+## ⚙️ Backend Logic
 The backend operates as a computer vision pipeline wrapped in a **FastAPI** server, specifically designed to monitor real-time classroom occupancy.
 
 ### 1. Object Detection and Segmentation
