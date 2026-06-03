@@ -133,10 +133,6 @@ If [`uv`](https://docs.astral.sh/uv/) is installed:
    uv sync
    ```
 
-
-   172.18.106.198
-   http://172.18.106.198:5000
-
 ## 👥 Credits
 
 Made with ❤️ by:
